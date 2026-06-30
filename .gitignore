@@ -1,0 +1,85 @@
+# ==========================
+# NovaPOS
+# ==========================
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual Environment
+backend/venv/
+.venv/
+venv/
+
+# Environment variables
+.env
+*.env
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Alembic cache
+backend/alembic/versions/__pycache__/
+
+# Logs
+logs/
+*.log
+
+# Backups
+data/**/backups/
+
+# OCR temporary files
+data/**/uploads/ocr/tmp/
+
+# Generated documents
+data/**/uploads/comprobantes/
+data/**/uploads/facturas/
+
+# Product images (optional)
+# data/**/uploads/productos/
+
+# Node
+frontend/node_modules/
+
+# Vite
+frontend/dist/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# Coverage
+.coverage
+htmlcov/
+
+# Testing
+.pytest_cache/
+
+# Build
+build/
+dist/
+
+# Cache
+.cache/
