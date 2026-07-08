@@ -1,10 +1,10 @@
 # NovaPOS — Arquitectura Frontend
 
-## 1. Objetivo
+# 1. Objetivo
 
-Definir la arquitectura oficial del frontend de NovaPOS para garantizar una interfaz consistente, escalable, mantenible y orientada a una experiencia de usuario rápida e intuitiva.
+Definir la arquitectura oficial del frontend de NovaPOS para garantizar una interfaz moderna, escalable, mantenible y preparada para crecer desde una única tienda hasta una plataforma comercial multiempresa.
 
-La arquitectura debe permitir agregar nuevos módulos sin afectar los existentes.
+La arquitectura debe facilitar el desarrollo de nuevos módulos sin afectar los existentes, manteniendo una experiencia de usuario rápida, intuitiva y consistente.
 
 ---
 
@@ -13,28 +13,16 @@ La arquitectura debe permitir agregar nuevos módulos sin afectar los existentes
 El frontend utilizará exclusivamente:
 
 ```txt
-React
-Vite
+Angular
 TypeScript
+Angular Router
+Reactive Forms
+HttpClient
+RxJS
 Tailwind CSS
-React Router
-TanStack Query
-Zustand
-React Hook Form
-Zod
-Axios
-Lucide React
+Angular CLI
+Standalone Components
 ```
-
-No se utilizarán:
-
-```txt
-Bootstrap
-Material UI
-Modo Oscuro
-```
-
----
 
 # 3. Arquitectura general
 
@@ -42,19 +30,22 @@ Modo Oscuro
 Usuario
     │
     ▼
-Página (Page)
+Página
     │
     ▼
-Feature
+Layout
+    │
+    ▼
+Feature (Módulo)
     │
     ▼
 Componentes
     │
     ▼
-Hooks
+Services
     │
     ▼
-Services
+HttpClient
     │
     ▼
 API Backend
@@ -74,24 +65,25 @@ frontend/
 ├── src/
 │   │
 │   ├── app/
-│   ├── assets/
-│   ├── components/
-│   ├── config/
-│   ├── features/
-│   ├── hooks/
-│   ├── layouts/
-│   ├── pages/
-│   ├── routes/
-│   ├── services/
-│   ├── stores/
-│   ├── types/
-│   ├── utils/
+│   │   ├── core/
+│   │   ├── features/
+│   │   ├── layouts/
+│   │   ├── shared/
+│   │   ├── app.config.ts
+│   │   ├── app.routes.ts
+│   │   └── app.ts
 │   │
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── index.css
+│   ├── assets/
+│   │
+│   ├── environments/
+│   │
+│   ├── styles.css
+│   └── main.ts
 │
-└── package.json
+├── angular.json
+├── package.json
+├── tsconfig.json
+└── tailwind.config.js
 ```
 
 ---
@@ -100,15 +92,133 @@ frontend/
 
 ## app
 
-Configuración principal del frontend.
+Contiene toda la aplicación Angular.
+
+Aquí viven:
+
+```txt
+Configuración
+
+Rutas
+
+Layouts
+
+Módulos
+
+Componentes
+
+Servicios
+```
+
+---
+
+## core
+
+Contiene funcionalidades globales del sistema.
 
 Ejemplos:
 
 ```txt
-queryClient.ts
-providers.tsx
-theme.ts
+authentication
+
+guards
+
+interceptors
+
+services
+
+models
+
+constants
+
+tokens
 ```
+
+Todo lo que se comparte entre módulos vive aquí.
+
+---
+
+## features
+
+Cada módulo funcional del sistema.
+
+Ejemplos:
+
+```txt
+auth
+
+dashboard
+
+sales
+
+inventory
+
+products
+
+customers
+
+suppliers
+
+cash
+
+reports
+
+intelligence
+
+users
+
+settings
+```
+
+Cada Feature contiene únicamente la lógica relacionada con su módulo.
+
+---
+
+## layouts
+
+Layouts generales de la aplicación.
+
+Ejemplos:
+
+```txt
+AuthLayout
+
+MainLayout
+```
+
+MainLayout contendrá:
+
+```txt
+Sidebar
+
+Header
+
+Contenido principal
+```
+
+---
+
+## shared
+
+Componentes reutilizables.
+
+Ejemplos:
+
+```txt
+components
+
+directives
+
+pipes
+
+validators
+
+models
+
+interfaces
+```
+
+No contiene lógica de negocio.
 
 ---
 
@@ -118,265 +228,190 @@ Archivos estáticos.
 
 ```txt
 logos
-íconos
-imágenes
+
+iconos
+
+imagenes
+
 fuentes
 ```
 
 ---
 
-## components
+## environments
 
-Componentes reutilizables.
-
-Ejemplos:
-
-```txt
-Button.tsx
-Input.tsx
-Modal.tsx
-Card.tsx
-DataTable.tsx
-SearchInput.tsx
-```
-
-No contienen lógica de negocio.
-
----
-
-## config
-
-Configuraciones generales.
+Configuraciones por ambiente.
 
 Ejemplos:
 
 ```txt
-api.ts
-constants.ts
-permissions.ts
 environment.ts
+
+environment.development.ts
 ```
 
 ---
 
-## features
+# 6. Organización interna de cada Feature
 
-Cada módulo funcional del sistema.
-
-Ejemplo:
+Cada módulo seguirá la siguiente estructura:
 
 ```txt
-auth/
-products/
-customers/
-sales/
-inventory/
-cash/
-reports/
-settings/
+feature/
+│
+├── components/
+├── pages/
+├── services/
+├── models/
+├── interfaces/
+├── guards/
+├── resolvers/
+└── routes.ts
 ```
 
-Dentro de cada feature:
-
-```txt
-components/
-hooks/
-services/
-types/
-```
-
-Toda la lógica específica del módulo vive aquí.
+Cada módulo será independiente del resto.
 
 ---
 
-## hooks
+# 7. Comunicación con el Backend
 
-Hooks reutilizables.
-
-Ejemplos:
+Toda comunicación utilizará:
 
 ```txt
-useDebounce.ts
-usePagination.ts
-useLocalStorage.ts
-useScanner.ts
+HttpClient
 ```
 
----
+Los componentes nunca consumirán la API directamente.
 
-## layouts
-
-Layouts generales.
-
-Ejemplos:
+El flujo será:
 
 ```txt
-MainLayout.tsx
-AuthLayout.tsx
-```
+Component
 
-El layout principal contendrá:
+↓
 
-```txt
-Sidebar
-Navbar
-Contenido
+Service
+
+↓
+
+HttpClient
+
+↓
+
+Backend
 ```
 
 ---
 
-## pages
+# 8. Estado de la aplicación
 
-Pantallas completas.
-
-Ejemplos:
+NovaPOS utilizará principalmente:
 
 ```txt
-DashboardPage.tsx
-SalesPage.tsx
-ProductsPage.tsx
-CustomersPage.tsx
+Signals (cuando sea necesario)
+
+RxJS
+
+Servicios Singleton
 ```
 
-Las páginas solo organizan componentes.
-
-No contienen lógica de negocio.
+El objetivo es mantener un estado simple, predecible y fácil de mantener.
 
 ---
 
-## routes
+# 9. Formularios
 
-Configuración del enrutamiento.
-
-Ejemplo:
+Todos los formularios utilizarán:
 
 ```txt
-index.tsx
-privateRoutes.tsx
-publicRoutes.tsx
+Reactive Forms
 ```
+
+Las validaciones existirán tanto en:
+
+```txt
+Frontend
+
+Backend
+```
+
+Nunca depender únicamente del frontend.
 
 ---
 
-## services
+# 10. Componentes reutilizables
 
-Comunicación con el backend.
-
-Ejemplos:
-
-```txt
-productService.ts
-saleService.ts
-authService.ts
-```
-
-Aquí solo existen llamadas HTTP.
-
----
-
-## stores
-
-Estado global usando Zustand.
-
-Ejemplos:
-
-```txt
-authStore.ts
-cartStore.ts
-settingsStore.ts
-```
-
-Solo información compartida.
-
----
-
-## types
-
-Interfaces y tipos TypeScript.
-
-Ejemplos:
-
-```txt
-Product.ts
-Sale.ts
-Customer.ts
-Receipt.ts
-```
-
----
-
-## utils
-
-Funciones reutilizables.
-
-Ejemplos:
-
-```txt
-currency.ts
-date.ts
-validators.ts
-printer.ts
-```
-
----
-
-# 6. Componentes reutilizables
-
-NovaPOS tendrá un catálogo único de componentes.
+NovaPOS tendrá un único catálogo oficial de componentes.
 
 Ejemplos:
 
 ```txt
 Button
+
 Input
+
 Select
+
 Checkbox
+
 Radio
-Card
-Badge
+
 Modal
+
 Table
-SearchInput
-EmptyState
+
+Card
+
+Badge
+
+SearchBox
+
+Pagination
+
 Loading
+
+EmptyState
+
 ConfirmDialog
 ```
 
-No se crearán versiones distintas del mismo componente.
+Nunca crear variantes innecesarias.
 
 ---
 
-# 7. Diseño visual
+# 11. Diseño visual
 
-El sistema utilizará un único diseño.
-
-Características:
+El diseño oficial será:
 
 ```txt
-Fondo blanco
+Minimalista
 
-Mucho espacio
+Profesional
+
+Corporativo
+
+Mucho espacio visual
+
+Fondo blanco
 
 Bordes suaves
 
 Sombras ligeras
 
-Botones grandes
-
 Tipografía limpia
 
-Íconos Lucide
+Botones grandes
 
 Sin degradados exagerados
 
-Sin animaciones innecesarias
+Sin modo oscuro
 ```
 
 ---
 
-# 8. Responsive
+# 12. Responsive
 
-Todo el sistema será compatible con:
+Compatible con:
 
 ```txt
 PC
@@ -386,7 +421,7 @@ Tablet
 Celular
 ```
 
-El orden de diseño será:
+La prioridad será:
 
 ```txt
 Desktop First
@@ -394,7 +429,7 @@ Desktop First
 
 ---
 
-# 9. Navegación
+# 13. Navegación
 
 La navegación principal utilizará Sidebar.
 
@@ -424,69 +459,55 @@ Configuración
 
 ---
 
-# 10. Estado global
+# 14. Rutas
 
-Solo se almacenará en Zustand información compartida.
-
-Ejemplos:
+Las rutas estarán centralizadas en:
 
 ```txt
-Usuario autenticado
-
-Configuración
-
-Carrito de venta
-
-Caja activa
-
-Tienda activa
+app.routes.ts
 ```
 
-No almacenar información temporal innecesaria.
+Se utilizarán:
+
+```txt
+Lazy Loading
+
+Route Guards
+
+CanActivate
+
+CanMatch
+```
+
+Las rutas privadas requerirán autenticación mediante JWT.
 
 ---
 
-# 11. Datos remotos
+# 15. Seguridad
 
-Toda consulta al backend utilizará TanStack Query.
-
-Beneficios:
+El frontend implementará:
 
 ```txt
-Cache
+JWT
 
-Reintentos
+Auth Guard
 
-Invalidación
+HTTP Interceptor
 
-Refetch
+Manejo automático de Token
 
-Optimización
+Redirección al Login
+
+Control básico de permisos
 ```
 
-Nunca realizar llamadas directas con Axios desde componentes.
+Toda validación crítica permanecerá en el backend.
 
 ---
 
-# 12. Formularios
+# 16. Pantalla principal
 
-Todos los formularios utilizarán:
-
-```txt
-React Hook Form
-
-+
-
-Zod
-```
-
-Validación siempre en frontend y backend.
-
----
-
-# 13. Pantalla principal
-
-La pantalla principal será:
+La pantalla principal del sistema será:
 
 ```txt
 Emitir Recibo
@@ -498,7 +519,7 @@ Emitir una venta en menos de 30 segundos.
 
 ---
 
-# 14. Flujo de venta
+# 17. Flujo de venta
 
 ```txt
 Buscar producto
@@ -517,24 +538,24 @@ Seleccionar comprobante
 
 ↓
 
-Seleccionar pago
+Seleccionar método de pago
 
 ↓
 
-Checks opcionales
+Seleccionar opciones adicionales
 
 ↓
 
 Emitir Recibo
 ```
 
-Todo en una sola pantalla.
+Todo el proceso debe realizarse desde una única pantalla.
 
 ---
 
-# 15. Acciones mediante checks
+# 18. Acciones mediante opciones
 
-No existirán botones independientes para acciones secundarias.
+Las acciones secundarias estarán disponibles mediante checks o interruptores.
 
 Ejemplos:
 
@@ -547,44 +568,48 @@ Guardar Imagen
 
 Registrar Cliente
 
-Registrar Fiado
+Venta Fiada
 ```
 
-Todas serán opciones seleccionables mediante checks.
+No crear botones independientes para estas acciones.
 
 ---
 
-# 16. Escáner
+# 19. Escáner
 
 El lector USB funcionará como teclado.
 
 No se desarrollará integración especial.
 
-En dispositivos móviles se utilizará ZXing.
+Para dispositivos móviles se evaluará ZXing cuando sea necesario.
 
 ---
 
-# 17. Rendimiento
+# 20. Rendimiento
 
-El frontend debe priorizar:
+El frontend priorizará:
 
 ```txt
-Pocas renderizaciones
+Lazy Loading
+
+Standalone Components
 
 Componentes reutilizables
 
-Carga diferida cuando sea necesario
+Carga rápida
 
-Consultas cacheadas
+Consultas optimizadas
 
-Respuestas rápidas
+RxJS eficiente
+
+Mínimas renderizaciones
 ```
 
 ---
 
-# 18. Nomenclatura
+# 21. Nomenclatura
 
-Componentes:
+Componentes
 
 ```txt
 PascalCase
@@ -593,32 +618,50 @@ PascalCase
 Ejemplos:
 
 ```txt
-ProductCard.tsx
+ProductCardComponent
 
-CustomerModal.tsx
+CustomerModalComponent
 
-CashSummary.tsx
+SidebarComponent
 ```
 
-Hooks:
+Servicios
 
 ```txt
-useProducts.ts
-
-useSales.ts
+camelCase + Service
 ```
 
-Stores:
+Ejemplos:
 
 ```txt
-authStore.ts
+product.service.ts
 
-cartStore.ts
+sale.service.ts
+
+auth.service.ts
+```
+
+Modelos
+
+```txt
+PascalCase
+```
+
+Ejemplos:
+
+```txt
+Product
+
+Customer
+
+Sale
+
+Receipt
 ```
 
 ---
 
-# 19. Filosofía UX
+# 22. Filosofía UX
 
 Todo debe poder aprenderse en menos de una hora.
 
@@ -626,20 +669,22 @@ El usuario nunca debe preguntarse:
 
 > "¿Dónde está esta opción?"
 
-La interfaz debe guiar naturalmente el flujo de trabajo.
+La interfaz debe guiar naturalmente el flujo de trabajo, reduciendo clics y priorizando la velocidad en la operación diaria.
 
 ---
 
-# 20. Regla final
+# 23. Regla final
 
 Las páginas organizan.
 
-Los componentes muestran.
+Los layouts estructuran.
 
-Los hooks reutilizan lógica.
+Los componentes muestran información.
 
-Los services hablan con el backend.
+Los servicios gestionan la comunicación con el backend.
 
-Los stores comparten estado.
+Reactive Forms administra los formularios.
 
-Ninguna capa debe asumir responsabilidades de otra.
+RxJS controla los flujos de datos.
+
+Ninguna capa debe asumir responsabilidades que pertenecen a otra.
