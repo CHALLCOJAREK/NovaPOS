@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -96,3 +96,8 @@ class Sale(Base):
         back_populates="sale",
         cascade="all, delete-orphan"
     )
+    document = relationship(
+        "SaleDocument",
+        back_populates="sale",
+        uselist=False,
+    )    
