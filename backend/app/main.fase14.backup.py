@@ -4,7 +4,6 @@ from app.routers.auth_router import router as auth_router
 from app.routers.cash_router import router as cash_router
 from app.routers.customer_debt_router import router as customer_debt_router
 from app.routers.customer_router import router as customer_router
-from app.routers.dashboard import router as dashboard_router
 from app.routers.inventory_movement_router import (
     router as inventory_movement_router,
 )
@@ -14,8 +13,6 @@ from app.routers.product_category_router import (
 )
 from app.routers.product_router import router as product_router
 from app.routers.purchase_router import router as purchase_router
-from app.routers.report import router as report_router
-from app.routers.report_export import router as report_export_router
 from app.routers.role_router import router as role_router
 from app.routers.sale_document_router import (
     router as sale_document_router,
@@ -111,20 +108,6 @@ app.include_router(
     prefix=API_PREFIX,
 )
 
-app.include_router(
-    dashboard_router,
-    prefix=API_PREFIX,
-)
-
-app.include_router(
-    report_router,
-    prefix=API_PREFIX,
-)
-
-app.include_router(
-    report_export_router,
-    prefix=API_PREFIX,
-)
 
 @app.get("/")
 def health_check():
